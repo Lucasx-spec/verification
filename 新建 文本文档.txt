@@ -1,0 +1,28 @@
+五、最安全的完整性篡改测试步骤
+如果你要真的测试，建议这样做：
+
+1. 先备份一条日志原值
+从数据库里找到最新一条审计日志，记下：
+
+id
+operation
+logContentHash
+prevHash
+currentHash
+2. 修改非哈希字段
+比如把：
+
+operation = VERIFY_FILE
+改成：
+
+operation = VERIFY_FILE_TAMPERED
+不要改 logContentHash、prevHash、currentHash。
+
+3. 重新执行完整性校验
+预期出现：
+
+CONTENT_HASH_MISMATCH
+说明日志内容被改过。
+
+4. 改回原值
+测试完一定改回来，否则后面校验一直异常。
